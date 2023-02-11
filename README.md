@@ -1,8 +1,8 @@
-<p align="center"># FFXIV Treasure Map Tracker
+# FFXIV Treasure Map Tracker
 
-FFXIV Dalamud Plugin for tracking treasure map links sent in /party chat.
+<p align="center">FFXIV Dalamud Plugin for tracking treasure map links sent in /party chat.</p>
 
-![](https://github.com/yaakushi/ffxiv-map-tracker/preview.gif)</p>
+<p align="center"><img src="https://raw.githubusercontent.com/Yaakushi/ffxiv-treasure-tracker/master/preview.gif" /></p>
 
 ## TODO
 
