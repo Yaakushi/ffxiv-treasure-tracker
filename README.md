@@ -10,8 +10,10 @@
 - [ ] Fill out the Dalamud .JSON with actual plugin data
 - [ ] Remove unneeded code from the SamplePlugin project
 - [ ] Add a refresh button in the tracker window
-- [ ] Find a way to track people digging their map or opening their treasure chest.
+- [ ] Find a way to track people digging their map or opening their treasure chest
 - [ ] Find a way to let people link the map for others without losing their own link?
+- [ ] Make the tracker window prettier
+- [ ] Check if we really need a configuration window, since the might be nothing to configure?
 
 ## Wishlist for the future
 
