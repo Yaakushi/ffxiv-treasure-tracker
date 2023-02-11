@@ -1,0 +1,13 @@
+{
+  "Author": "Yaakushi Icefox",
+  "Name": "Bulk Desynthesis",
+  "Punchline": "Does bulk desynthesis. Probably makes a lot of fine sand.",
+  "Description": "Testing!\nTesting 2!",
+  "InternalName": "samplePlugin",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "sample",
+    "plugin",
+    "goats"
+  ]
+}
