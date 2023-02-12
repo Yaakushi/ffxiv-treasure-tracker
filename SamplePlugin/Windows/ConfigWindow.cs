@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-
 namespace SamplePlugin.Windows;
 
 public class ConfigWindow : Window, IDisposable
@@ -25,12 +24,26 @@ public class ConfigWindow : Window, IDisposable
     public override void Draw()
     {
         // can't ref a property, so use a local copy
-        var configValue = this.Configuration.SomePropertyToBeSavedAndWithADefault;
-        if (ImGui.Checkbox("Random Config Bool", ref configValue))
+        var configValue = this.Configuration.shouldRemoveOnDig;
+        if (ImGui.Checkbox("Remove map links on dig.", ref configValue))
         {
-            this.Configuration.SomePropertyToBeSavedAndWithADefault = configValue;
+            this.Configuration.shouldRemoveOnDig = configValue;
             // can save immediately on change, if you don't want to provide a "Save and Close" button
             this.Configuration.Save();
         }
+
+        ImGui.SameLine();
+        ImGui.TextDisabled("(?)");
+        HelpMarker("Track when players use the \"Dig\" action in the game, and remove their previous map link as soon as it happens. It can be helpful to keep track of actual maps pending in a zone, but it can also lead to links incorrectly being removed if someone use the Dig action spuriously, as there's currently no way to check whether or not the dig action resulted in a chest.");
+    }
+
+    private static void HelpMarker(String text)
+    {
+        if (!ImGui.IsItemHovered()) return;
+        ImGui.BeginTooltip();
+        ImGui.PushTextWrapPos(ImGui.GetFontSize() * 20f);
+        ImGui.TextUnformatted(text);
+        ImGui.PopTextWrapPos();
+        ImGui.EndTooltip();
     }
 }

@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState;
 using Dalamud.Utility;
+using FFXIVClientStructs.FFXIV.Component.GUI;
+using System.Linq;
 
 namespace SamplePlugin
 {
@@ -99,6 +101,30 @@ namespace SamplePlugin
 
         private void onChatMessage(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
         {
+            // 2091 = Chat type for dig logs.
+            if ((ushort)type == 2091 && Configuration.shouldRemoveOnDig)
+            {
+                // Combat log -- look for dig.
+                Dalamud.Logging.PluginLog.Information("Sender: {sender}\n\n--------------\n\nMessage: {message}", sender.ToJson(), message.ToJson());
+                TextPayload? usePayload = message.Payloads.Last(payload => payload.Type == PayloadType.RawText) as TextPayload;
+
+                // TODO: Deal with i18n.
+                if((!(usePayload!.Text?.Contains("use Dig")) ?? false) || (!(usePayload.Text?.Contains("uses Dig")) ?? false))
+                {
+                    // Non-dig log. We don't care.
+                    return;
+                }
+
+                PlayerPayload? playerPayload = message.Payloads.First(payload => payload.Type == PayloadType.Player) as PlayerPayload;
+                var key = (playerPayload != null) ? playerPayload.PlayerName + playerPayload.World.Name : this.PlayerCharacter.Name + this.PlayerCharacter.HomeWorld.GameData?.Name;
+                MapLinks.Remove(key);
+
+                PruneNonPartyMembers();
+                RegenerateMapLinkTables();
+
+                return;
+            }
+
             if (type != XivChatType.Party && type != XivChatType.CrossParty && type != XivChatType.CrossLinkShell2) return;
 
             MapLinkPayload? mapLinkPayload = message.Payloads.Find(payload => payload.Type == PayloadType.MapLink) as MapLinkPayload;
