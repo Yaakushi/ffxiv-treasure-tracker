@@ -12,12 +12,16 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace MapTrackerPlugin.Windows;
 
+public delegate void RefreshEventHandler(object sender, EventArgs args);
+
 public class MainWindow : Window, IDisposable
 {
-    private Plugin Plugin;
+    private Plugin plugin;
+
+    public event RefreshEventHandler OnRefreshed;
 
     public MainWindow(Plugin plugin) : base(
-        "Map Hitchhiker", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+        "Map Hitchhiker", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.AlwaysAutoResize)
     {
         this.SizeConstraints = new WindowSizeConstraints
         {
@@ -26,7 +30,7 @@ public class MainWindow : Window, IDisposable
         };
 
         /*this.GoatImage = goatImage;*/
-        this.Plugin = plugin;
+        this.plugin = plugin;
     }
 
     public void Dispose()
@@ -40,26 +44,26 @@ public class MainWindow : Window, IDisposable
         ImGui.TableSetupColumn("Map Location");
         ImGui.TableHeadersRow();
 
-        for(int i = 0; i < Plugin.PartyMembersList.Count; i++)
+        for(int i = 0; i < plugin.PartyMembersList.Count; i++)
         {
             ImGui.TableNextRow();
 
-            if (Plugin.IsOnTheSameAreaAsThePlayer[i])
+            if (plugin.IsOnTheSameAreaAsThePlayer[i])
             {
                 ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg1, ImGui.GetColorU32(new Vector4(0.7f, 0.0f, 0.0f, 0.5f)));
             }
 
             ImGui.TableSetColumnIndex(0);
-            ImGui.Text(Plugin.PartyMembersList[i]);
+            ImGui.Text(plugin.PartyMembersList[i]);
 
             ImGui.TableSetColumnIndex(1);
 
-            MapLinkPayload? currentMapLink = Plugin.PartyMemberLinks[i];
+            MapLinkPayload? currentMapLink = plugin.PartyMemberLinks[i];
             if (currentMapLink != null)
             {
                 if (ImGui.Button(currentMapLink.PlaceName))
                 {
-                    Plugin.OpenMapWithMapLink(currentMapLink);
+                    plugin.OpenMapWithMapLink(currentMapLink);
                 }
             }
             else
@@ -69,5 +73,7 @@ public class MainWindow : Window, IDisposable
         }
 
         ImGui.EndTable();
+
+        if(ImGui.Button("Refresh")) OnRefreshed?.Invoke(this, EventArgs.Empty);
     }
 }

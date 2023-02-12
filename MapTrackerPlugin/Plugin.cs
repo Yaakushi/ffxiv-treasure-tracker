@@ -70,17 +70,24 @@ namespace MapTrackerPlugin
                 HelpMessage = "Display the treasure map tracker window."
             });
 
+            this.MainWindow.OnRefreshed += OnWindowRefreshRequest;
+
             this.PluginInterface.UiBuilder.Draw += DrawUI;
             this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
 
-            this.Chat.ChatMessage += onChatMessage;
-            this.ClientState.Login += onLogin;
+            this.Chat!.ChatMessage += onChatMessage;
+            this.ClientState!.Login += onLogin;
             this.ClientState.TerritoryChanged += onTerritoryChanged;
 
             if(ClientState.LocalPlayer != null)
             {
                 this.PlayerCharacter = ClientState.LocalPlayer;
             }
+        }
+
+        private void OnWindowRefreshRequest(object sender, EventArgs args)
+        {
+            RegenerateMapLinkTables();
         }
 
         private void onTerritoryChanged(object? sender, ushort e)
@@ -95,8 +102,6 @@ namespace MapTrackerPlugin
             {
                 this.PlayerCharacter = loginClientState.LocalPlayer;
             }
-            if(sender != null) Dalamud.Logging.PluginLog.LogInformation("sender: " + sender.ToString());
-            if(e != null) Dalamud.Logging.PluginLog.LogInformation("e: " + e.ToString());
         }
 
         private void onChatMessage(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
@@ -116,7 +121,7 @@ namespace MapTrackerPlugin
                 }
 
                 PlayerPayload? playerPayload = message.Payloads.First(payload => payload.Type == PayloadType.Player) as PlayerPayload;
-                var key = (playerPayload != null) ? playerPayload.PlayerName + playerPayload.World.Name : this.PlayerCharacter.Name + this.PlayerCharacter.HomeWorld.GameData?.Name;
+                var key = (playerPayload != null) ? Utils.getKeyFrom(playerPayload) : Utils.getKeyFrom(this.PlayerCharacter);
                 MapLinks.Remove(key);
 
                 PruneNonPartyMembers();
@@ -143,15 +148,14 @@ namespace MapTrackerPlugin
 
             if (senderPayload != null)
             {
-                MapLinks[senderPayload.PlayerName + senderPayload.World.Name] = mapLinkPayload;
+                MapLinks[Utils.getKeyFrom(senderPayload)] = mapLinkPayload!;
             }
 
             else
             {
                 // If there isn't a PlayerPayload (no link in the message), we just assume the player is the one sending the message.
                 // This can technically break if another plugins send a message through party chat -- Like Sonar could technically do?
-                Dalamud.Logging.PluginLog.LogInformation(this.PlayerCharacter.Name.ToString() + " flower " + this.PlayerCharacter.HomeWorld.GameData.Name);
-                MapLinks[this.PlayerCharacter.Name.ToString() + this.PlayerCharacter.HomeWorld.GameData.Name] = mapLinkPayload;
+                MapLinks[Utils.getKeyFrom(this.PlayerCharacter)] = mapLinkPayload!;
             }
         }
 
@@ -169,10 +173,10 @@ namespace MapTrackerPlugin
                 }
                 else
                 {
-                    this.PartyMembersList.Add(partyMember.Name + " (" + partyMember.World.GameData.Name + ")");
+                    this.PartyMembersList.Add(partyMember.Name + " (" + partyMember.World.GameData!.Name + ")");
                 }
 
-                String key = partyMember.Name + partyMember.World.GameData.Name;
+                String key = Utils.getKeyFrom(partyMember);
                 if (MapLinks.ContainsKey(key))
                 {
                     this.PartyMemberLinks.Add(MapLinks[key]);
@@ -194,7 +198,7 @@ namespace MapTrackerPlugin
             // Prune party list.
             foreach (PartyMember partyMember in PartyList)
             {
-                validKeys.Add(partyMember.Name + partyMember.World.GameData.Name);
+                validKeys.Add(Utils.getKeyFrom(partyMember));
             }
 
             foreach (String key in MapLinks.Keys)

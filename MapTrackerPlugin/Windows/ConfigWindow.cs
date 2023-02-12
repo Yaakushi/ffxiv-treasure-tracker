@@ -34,16 +34,6 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.SameLine();
         ImGui.TextDisabled("(?)");
-        HelpMarker("Track when players use the \"Dig\" action in the game, and remove their previous map link as soon as it happens. It can be helpful to keep track of actual maps pending in a zone, but it can also lead to links incorrectly being removed if someone use the Dig action spuriously, as there's currently no way to check whether or not the dig action resulted in a chest.");
-    }
-
-    private static void HelpMarker(String text)
-    {
-        if (!ImGui.IsItemHovered()) return;
-        ImGui.BeginTooltip();
-        ImGui.PushTextWrapPos(ImGui.GetFontSize() * 20f);
-        ImGui.TextUnformatted(text);
-        ImGui.PopTextWrapPos();
-        ImGui.EndTooltip();
+        Utils.HelpMarker("Track when players use the \"Dig\" action in the game, and remove their previous map link as soon as it happens. It can be helpful to keep track of actual maps pending in a zone, but it can also lead to links incorrectly being removed if someone use the Dig action spuriously, as there's currently no way to check whether or not the dig action resulted in a chest.");
     }
 }
