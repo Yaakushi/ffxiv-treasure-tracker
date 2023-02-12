@@ -10,12 +10,14 @@
 - [ ] Fill out the Dalamud .JSON with actual plugin data
 - [ ] Remove unneeded code from the SamplePlugin project
 - [ ] Add a refresh button in the tracker window
-- [ ] Find a way to track people digging their map or opening their treasure chest
+- [x] Find a way to track people digging their map or opening their treasure chest
 - [ ] Find a way to let people link the map for others without losing their own link?
 - [ ] Make the tracker window prettier
-- [ ] Check if we really need a configuration window, since the might be nothing to configure?
+- [x] ~~Check if we really need a configuration window, since the might be nothing to configure?~~
+- [ ] Add a button to manually reset/remove links from the plugin.
 
 ## Wishlist for the future
 
 - [ ] Make code not sucky.
 - [ ] Show all flags on the map at the same time? That'd be kinda cool. (Thanks Gucci)
+- [ ] Try to find a way to make the dig tracker more reliable? Right now, it will "fail" if someone '/ac dig' outside of where they are supposed to.
