@@ -1,0 +1,13 @@
+{
+  "Author": "yaakushi",
+  "Name": "Nameless Treasure Map Tracker",
+  "Punchline": "Track links sent in party chat. Useful for keeping track of where everyone treasure map's is.'",
+  "Description": "Just use the command below whenever you want to see the tracker UI.",
+  "InternalName": "MapTrackerPlugin",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "map",
+    "links",
+    "fox"
+  ]
+}
