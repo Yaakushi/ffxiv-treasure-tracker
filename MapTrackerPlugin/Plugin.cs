@@ -135,8 +135,6 @@ namespace MapTrackerPlugin
             MapLinkPayload? mapLinkPayload = message.Payloads.Find(payload => payload.Type == PayloadType.MapLink) as MapLinkPayload;
             if (mapLinkPayload == null) return;
 
-            Dalamud.Logging.PluginLog.LogInformation("ok!");
-
             AddNewMapLink(sender, mapLinkPayload);
             PruneNonPartyMembers();
             RegenerateMapLinkTables();
